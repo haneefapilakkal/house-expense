@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'reports', 'sources', 'categories'
 
@@ -52,6 +53,17 @@ const Dashboard = () => {
     if (selected) {
       setCurrentUser(selected);
     }
+  };
+
+  // Open edit form for a specific expense
+  const handleEdit = (expense) => {
+    setEditingExpense(expense);
+    setShowForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingExpense(null);
   };
 
   // 1. Filter out Cancelled transactions for stats
@@ -151,8 +163,13 @@ const Dashboard = () => {
                         <span className="font-bold text-red-400">₹{parseFloat(exp.amount).toFixed(2)}</span>
                         <span className="text-slate-400 mx-2">•</span>
                         <span className="text-slate-500">
-                          Submitted by {exp.creator?.name || 'User'} ({exp.category?.name})
+                          by {exp.creator?.name || 'User'} ({exp.category?.name})
                         </span>
+                        {exp.cancellationReason && (
+                          <p className="text-xs text-yellow-400/70 mt-1 italic">
+                            Reason: "{exp.cancellationReason}"
+                          </p>
+                        )}
                       </div>
                       <div className="flex gap-2 w-full sm:w-auto">
                         <button
@@ -206,7 +223,8 @@ const Dashboard = () => {
                   <ExpenseList 
                     expenses={expenses} 
                     currentUser={currentUser} 
-                    onExpenseDeleted={fetchData} 
+                    onExpenseDeleted={fetchData}
+                    onEdit={handleEdit}
                   />
                 )}
               </div>
@@ -342,7 +360,8 @@ const Dashboard = () => {
         <ExpenseForm 
           onExpenseAdded={fetchData} 
           currentUser={currentUser}
-          onClose={() => setShowForm(false)} 
+          onClose={handleCloseForm}
+          editingExpense={editingExpense}
         />
       )}
     </div>

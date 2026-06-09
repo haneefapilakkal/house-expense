@@ -40,6 +40,10 @@ const Expense = sequelize.define('Expense', {
   description: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  cancellationReason: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   timestamps: true

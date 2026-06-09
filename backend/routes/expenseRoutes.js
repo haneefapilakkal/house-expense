@@ -9,5 +9,6 @@ router.delete('/:id', expenseController.deleteExpense);
 router.put('/:id/request-cancel', expenseController.requestCancelExpense);
 router.put('/:id/approve-cancel', expenseController.approveCancelExpense);
 router.put('/:id/reject-cancel', expenseController.rejectCancelExpense);
+router.put('/:id/admin-cancel', expenseController.adminCancelExpense);
 
 module.exports = router;
