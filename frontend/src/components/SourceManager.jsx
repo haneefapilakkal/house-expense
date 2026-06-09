@@ -4,6 +4,14 @@ import { Plus, Pencil, Trash2, X, Save, Wallet, Building2, Coins, ArrowUpRight }
 
 const API_URL = import.meta.env.VITE_API_URL + '/sources';
 
+export const getSourceIcon = (type) => {
+  switch (type) {
+    case 'Loan': return <Building2 className="text-yellow-400" />;
+    case 'Asset Sale': return <Coins className="text-amber-400" />;
+    default: return <Wallet className="text-emerald-400" />;
+  }
+};
+
 const SourceManager = () => {
   const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,14 +84,6 @@ const SourceManager = () => {
       } catch (error) {
         console.error('Error deleting source:', error);
       }
-    }
-  };
-
-  const getSourceIcon = (type) => {
-    switch (type) {
-      case 'Loan': return <Building2 className="text-yellow-400" />;
-      case 'Asset Sale': return <Coins className="text-amber-400" />;
-      default: return <Wallet className="text-emerald-400" />;
     }
   };
 
@@ -260,4 +260,3 @@ const SourceManager = () => {
 };
 
 export default SourceManager;
-export { getSourceIcon };
