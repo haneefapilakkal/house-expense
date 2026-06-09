@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { FileText, Printer, Building2, Coins, Wallet, Download, Calendar, ArrowDownCircle } from 'lucide-react';
 import { getIconComponent, getSourceIcon } from './iconUtils';
 
-const EXPENSES_URL = import.meta.env.VITE_API_URL + '/expenses';
-const SOURCES_URL = import.meta.env.VITE_API_URL + '/sources';
+const EXPENSES_URL = '/expenses';
+const SOURCES_URL = '/sources';
 
 const Reports = () => {
   const [expenses, setExpenses] = useState([]);
@@ -17,8 +17,8 @@ const Reports = () => {
     const fetchData = async () => {
       try {
         const [expensesRes, sourcesRes] = await Promise.all([
-          axios.get(EXPENSES_URL),
-          axios.get(SOURCES_URL)
+          api.get(EXPENSES_URL),
+          api.get(SOURCES_URL)
         ]);
         setExpenses(expensesRes.data);
         setSources(sourcesRes.data);

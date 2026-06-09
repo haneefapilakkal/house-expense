@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Save, X, AlertTriangle, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 
-const CATEGORIES_URL = import.meta.env.VITE_API_URL + '/categories';
-const SOURCES_URL    = import.meta.env.VITE_API_URL + '/sources';
-const EXPENSES_URL   = import.meta.env.VITE_API_URL + '/expenses';
+const CATEGORIES_URL = '/categories';
+const SOURCES_URL    = '/sources';
+const EXPENSES_URL   = '/expenses';
 
 const ExpenseForm = ({ onExpenseAdded, currentUser, onClose, editingExpense }) => {
   const isEditing = Boolean(editingExpense);
@@ -29,8 +29,8 @@ const ExpenseForm = ({ onExpenseAdded, currentUser, onClose, editingExpense }) =
     const fetchFormData = async () => {
       try {
         const [catRes, srcRes] = await Promise.all([
-          axios.get(CATEGORIES_URL),
-          axios.get(SOURCES_URL)
+          api.get(CATEGORIES_URL),
+          api.get(SOURCES_URL)
         ]);
         setCategories(catRes.data);
         setSources(srcRes.data);
@@ -91,9 +91,9 @@ const ExpenseForm = ({ onExpenseAdded, currentUser, onClose, editingExpense }) =
       };
 
       if (isEditing) {
-        await axios.put(`${EXPENSES_URL}/${editingExpense.id}`, payload);
+        await api.put(`${EXPENSES_URL}/${editingExpense.id}`, payload);
       } else {
-        await axios.post(EXPENSES_URL, payload);
+        await api.post(EXPENSES_URL, payload);
       }
 
       onExpenseAdded();

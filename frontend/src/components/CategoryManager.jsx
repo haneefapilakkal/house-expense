@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 import { ICON_MAP, getIconComponent } from './iconUtils';
 
-const API_URL = import.meta.env.VITE_API_URL + '/categories';
+const API_URL = '/categories';
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
@@ -14,7 +14,7 @@ const CategoryManager = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await api.get(API_URL);
       setCategories(response.data);
       setLoading(false);
     } catch (error) {
@@ -31,9 +31,9 @@ const CategoryManager = () => {
     e.preventDefault();
     try {
       if (editingCategory) {
-        await axios.put(`${API_URL}/${editingCategory.id}`, formData);
+        await api.put(`${API_URL}/${editingCategory.id}`, formData);
       } else {
-        await axios.post(API_URL, formData);
+        await api.post(API_URL, formData);
       }
       fetchCategories();
       resetForm();
@@ -55,13 +55,11 @@ const CategoryManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this category? All related expenses will lose their category association.')) {
-      try {
-        await axios.delete(`${API_URL}/${id}`);
-        fetchCategories();
-      } catch (error) {
-        console.error('Error deleting category:', error);
-      }
+    try {
+      await api.delete(`${API_URL}/${id}`);
+      fetchCategories();
+    } catch (error) {
+      console.error('Error deleting category:', error);
     }
   };
 

@@ -3,10 +3,10 @@ import {
   Trash2, AlertCircle, Check, X, RefreshCw, Search,
   Pencil, Filter, Ban, MessageSquare
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 import { getIconComponent } from './iconUtils';
 
-const API_URL = import.meta.env.VITE_API_URL + '/expenses';
+const API_URL = '/expenses';
 
 // ─── Cancellation Reason Modal ────────────────────────────────────────────────
 const CancelReasonModal = ({ expense, onConfirm, onClose }) => {
@@ -160,7 +160,7 @@ const ExpenseList = ({ expenses, currentUser, onExpenseDeleted, onEdit }) => {
     setActionLoading(exp.id);
     setCancelModal(null);
     try {
-      await axios.put(`${API_URL}/${exp.id}/request-cancel`, { reason });
+      await api.put(`${API_URL}/${exp.id}/request-cancel`, { reason });
       onExpenseDeleted();
     } catch (err) {
       console.error('Error requesting cancellation:', err);
@@ -174,7 +174,7 @@ const ExpenseList = ({ expenses, currentUser, onExpenseDeleted, onEdit }) => {
     setActionLoading(exp.id);
     setAdminCancelModal(null);
     try {
-      await axios.put(`${API_URL}/${exp.id}/admin-cancel`, { reason });
+      await api.put(`${API_URL}/${exp.id}/admin-cancel`, { reason });
       onExpenseDeleted();
     } catch (err) {
       console.error('Error admin cancelling:', err);
@@ -186,7 +186,7 @@ const ExpenseList = ({ expenses, currentUser, onExpenseDeleted, onEdit }) => {
   const handleApproveCancel = async (id) => {
     setActionLoading(id);
     try {
-      await axios.put(`${API_URL}/${id}/approve-cancel`);
+      await api.put(`${API_URL}/${id}/approve-cancel`);
       onExpenseDeleted();
     } catch (err) {
       console.error('Error approving cancellation:', err);
@@ -198,7 +198,7 @@ const ExpenseList = ({ expenses, currentUser, onExpenseDeleted, onEdit }) => {
   const handleRejectCancel = async (id) => {
     setActionLoading(id);
     try {
-      await axios.put(`${API_URL}/${id}/reject-cancel`);
+      await api.put(`${API_URL}/${id}/reject-cancel`);
       onExpenseDeleted();
     } catch (err) {
       console.error('Error rejecting cancellation:', err);
@@ -210,7 +210,7 @@ const ExpenseList = ({ expenses, currentUser, onExpenseDeleted, onEdit }) => {
   const handleDelete = async (id) => {
     setActionLoading(id);
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await api.delete(`${API_URL}/${id}`);
       onExpenseDeleted();
     } catch (err) {
       console.error('Error deleting expense:', err);

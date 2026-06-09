@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 import { getSourceIcon } from './iconUtils';
 
-const API_URL = import.meta.env.VITE_API_URL + '/sources';
+const API_URL = '/sources';
 
 const SourceManager = () => {
   const [sources, setSources] = useState([]);
@@ -19,7 +19,7 @@ const SourceManager = () => {
 
   const fetchSources = async () => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await api.get(API_URL);
       setSources(response.data);
       setLoading(false);
     } catch (error) {
@@ -41,9 +41,9 @@ const SourceManager = () => {
       };
 
       if (editingSource) {
-        await axios.put(`${API_URL}/${editingSource.id}`, payload);
+        await api.put(`${API_URL}/${editingSource.id}`, payload);
       } else {
-        await axios.post(API_URL, payload);
+        await api.post(API_URL, payload);
       }
       fetchSources();
       resetForm();
@@ -70,13 +70,11 @@ const SourceManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this funding source? All related expenses will lose their source association.')) {
-      try {
-        await axios.delete(`${API_URL}/${id}`);
-        fetchSources();
-      } catch (error) {
-        console.error('Error deleting source:', error);
-      }
+    try {
+      await api.delete(`${API_URL}/${id}`);
+      fetchSources();
+    } catch (error) {
+      console.error('Error deleting source:', error);
     }
   };
 
