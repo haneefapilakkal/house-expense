@@ -88,8 +88,8 @@ const SourceManager = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-[2rem] p-6 md:p-8 mt-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 mt-6">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-bold text-white">Manage Funding Sources</h2>
           <p className="text-slate-500 text-sm mt-1">Configure loans, asset sales (gold), or individual contributors</p>
@@ -97,7 +97,7 @@ const SourceManager = () => {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-xl shadow-lg shadow-indigo-600/10 transition-all flex items-center gap-2 text-sm"
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-indigo-600/10 transition-all flex items-center justify-center gap-2 text-sm"
           >
             <Plus size={16} /> Add Source
           </button>
@@ -105,7 +105,7 @@ const SourceManager = () => {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-slate-950 border border-slate-800/80 rounded-2xl p-6 mb-6 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 sm:p-6 mb-6 space-y-4">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-lg font-semibold text-white">{editingSource ? 'Edit Source' : 'New Source'}</h3>
             <button type="button" onClick={resetForm} className="text-slate-400 hover:text-white">
@@ -197,20 +197,20 @@ const SourceManager = () => {
               key={source.id}
               className="bg-slate-950/40 border border-slate-800/80 rounded-2xl p-5 hover:border-slate-700 transition-all flex flex-col justify-between group relative"
             >
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-slate-850 rounded-xl">
+              <div className="flex justify-between items-start gap-2 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-3 bg-slate-850 rounded-xl flex-shrink-0">
                     {getSourceIcon(source.type)}
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-white text-lg">{source.name}</h4>
+                  <div className="min-w-0">
+                    <h4 className="font-semibold text-white text-lg truncate" title={source.name}>{source.name}</h4>
                     <span className="inline-block px-2.5 py-0.5 mt-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-800 text-slate-400">
                       {source.type}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1 flex-shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleEdit(source)}
                     className="p-1.5 text-slate-500 hover:text-indigo-400 transition-colors"

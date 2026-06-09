@@ -86,8 +86,8 @@ const CategoryManager = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-[2rem] p-6 md:p-8 mt-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 mt-6">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-bold text-white">Manage Categories</h2>
           <p className="text-slate-500 text-sm mt-1">Configure house construction stages and category tags</p>
@@ -95,7 +95,7 @@ const CategoryManager = () => {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-xl shadow-lg shadow-indigo-600/10 transition-all flex items-center gap-2 text-sm"
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-indigo-600/10 transition-all flex items-center justify-center gap-2 text-sm"
           >
             <Plus size={16} /> Add Category
           </button>
@@ -103,7 +103,7 @@ const CategoryManager = () => {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-slate-950 border border-slate-800/80 rounded-2xl p-6 mb-6 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 sm:p-6 mb-6 space-y-4">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-lg font-semibold text-white">{editingCategory ? 'Edit Category' : 'New Category'}</h3>
             <button type="button" onClick={resetForm} className="text-slate-400 hover:text-white">
@@ -167,15 +167,15 @@ const CategoryManager = () => {
           {categories.map((category) => (
             <div
               key={category.id}
-              className="flex justify-between items-center p-4 bg-slate-950/40 border border-slate-800/80 rounded-2xl hover:border-slate-700 transition-all group"
+              className="flex justify-between items-center p-3 sm:p-4 bg-slate-950/40 border border-slate-800/80 rounded-2xl hover:border-slate-700 transition-all group min-w-0 gap-3"
             >
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-slate-800 rounded-xl text-indigo-400">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="p-3 bg-slate-800 rounded-xl text-indigo-400 flex-shrink-0">
                   {getIconComponent(category.icon)}
                 </div>
-                <h4 className="font-semibold text-white text-base">{category.name}</h4>
+                <h4 className="font-semibold text-white text-base truncate">{category.name}</h4>
               </div>
-              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-2 flex-shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => handleEdit(category)}
                   className="p-2 text-slate-500 hover:text-indigo-400 transition-colors"

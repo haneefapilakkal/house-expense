@@ -67,38 +67,38 @@ const Dashboard = () => {
 
       {/* Tabs / Navigation */}
       <div className="max-w-6xl mx-auto px-6 mb-6">
-        <div className="flex bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800/80 max-w-md">
+        <div className="flex bg-slate-900/50 p-1 rounded-2xl border border-slate-800/80 max-w-sm sm:max-w-md">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold transition-all ${
+            className={`flex-1 py-2 px-3 sm:py-3 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'dashboard'
                 ? 'bg-slate-800 text-white shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <LayoutDashboard size={18} />
+            <LayoutDashboard className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
             Dashboard
           </button>
           <button
             onClick={() => setActiveTab('sources')}
-            className={`flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold transition-all ${
+            className={`flex-1 py-2 px-3 sm:py-3 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'sources'
                 ? 'bg-slate-800 text-white shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <Coins size={18} />
+            <Coins className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
             Sources
           </button>
           <button
             onClick={() => setActiveTab('categories')}
-            className={`flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold transition-all ${
+            className={`flex-1 py-2 px-3 sm:py-3 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'categories'
                 ? 'bg-slate-800 text-white shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <Tags size={18} />
+            <Tags className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
             Categories
           </button>
         </div>
