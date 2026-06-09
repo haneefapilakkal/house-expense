@@ -3,9 +3,6 @@ import axios from 'axios';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 import { getSourceIcon } from './iconUtils';
 
-// Re-export for consumers that import from SourceManager directly
-export { getSourceIcon };
-
 const API_URL = import.meta.env.VITE_API_URL + '/sources';
 
 const SourceManager = () => {

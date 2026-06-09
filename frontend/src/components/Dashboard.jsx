@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Wallet, TrendingUp, Calendar, Plus, LayoutDashboard, Coins, Tags, Sparkles, FileText, User as UserIcon, Check, X as XIcon, AlertTriangle } from 'lucide-react';
 import ExpenseList from './ExpenseList';
 import ExpenseForm from './ExpenseForm';
-import SourceManager, { getSourceIcon } from './SourceManager';
+import SourceManager from './SourceManager';
+import { getSourceIcon } from './iconUtils';
 import CategoryManager from './CategoryManager';
 import Reports from './Reports';
 

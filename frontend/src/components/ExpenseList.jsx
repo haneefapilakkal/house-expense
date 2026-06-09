@@ -4,7 +4,7 @@ import {
   Pencil, Filter, Ban, MessageSquare
 } from 'lucide-react';
 import axios from 'axios';
-import { getIconComponent } from './CategoryManager';
+import { getIconComponent } from './iconUtils';
 
 const API_URL = import.meta.env.VITE_API_URL + '/expenses';
 

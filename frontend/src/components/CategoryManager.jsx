@@ -3,9 +3,6 @@ import axios from 'axios';
 import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 import { ICON_MAP, getIconComponent } from './iconUtils';
 
-// Re-export for backward compatibility with other components
-export { getIconComponent, ICON_MAP };
-
 const API_URL = import.meta.env.VITE_API_URL + '/categories';
 
 const CategoryManager = () => {
