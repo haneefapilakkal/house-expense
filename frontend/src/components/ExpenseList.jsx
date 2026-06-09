@@ -1,21 +1,9 @@
 import React from 'react';
-import { ShoppingBag, Home, Zap, Coffee, Car, Film, HeartPulse, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Trash2, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { getIconComponent } from './CategoryManager';
 
 const API_URL = import.meta.env.VITE_API_URL + '/expenses';
-
-const getCategoryIcon = (category) => {
-  switch (category) {
-    case 'Rent/Mortgage': return <Home className="text-blue-400" />;
-    case 'Utilities': return <Zap className="text-yellow-400" />;
-    case 'Groceries': return <ShoppingBag className="text-green-400" />;
-    case 'Dining Out': return <Coffee className="text-orange-400" />;
-    case 'Transport': return <Car className="text-indigo-400" />;
-    case 'Entertainment': return <Film className="text-purple-400" />;
-    case 'Healthcare': return <HeartPulse className="text-red-400" />;
-    default: return <MoreHorizontal className="text-slate-400" />;
-  }
-};
 
 const ExpenseList = ({ expenses, onExpenseDeleted }) => {
   const handleDelete = async (id) => {
@@ -48,18 +36,32 @@ const ExpenseList = ({ expenses, onExpenseDeleted }) => {
             className="flex items-center justify-between p-4 bg-slate-900/50 border border-slate-800 rounded-2xl hover:border-slate-700 transition-all group"
           >
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-slate-800 rounded-xl group-hover:scale-110 transition-transform">
-                {getCategoryIcon(expense.category)}
+              <div className="p-3 bg-slate-850 rounded-xl text-indigo-400 group-hover:scale-110 transition-transform">
+                {getIconComponent(expense.category?.icon)}
               </div>
               <div>
                 <h4 className="font-semibold text-white">{expense.title}</h4>
-                <p className="text-sm text-slate-500">{new Date(expense.date).toLocaleDateString()}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-400 font-semibold">
+                    {expense.category?.name || 'Uncategorized'}
+                  </span>
+                  <span className="text-[10px] bg-indigo-950/40 text-indigo-400 border border-indigo-900/40 px-2 py-0.5 rounded font-semibold">
+                    Source: {expense.source?.name || 'None'}
+                  </span>
+                  <span className="text-[10px] text-slate-500">
+                    {new Date(expense.date).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
                 <p className="font-bold text-white">${parseFloat(expense.amount).toFixed(2)}</p>
-                <p className="text-xs text-slate-500">{expense.category}</p>
+                {expense.description && (
+                  <p className="text-[10px] text-slate-500 max-w-[150px] truncate" title={expense.description}>
+                    {expense.description}
+                  </p>
+                )}
               </div>
               <button 
                 onClick={() => handleDelete(expense.id)}

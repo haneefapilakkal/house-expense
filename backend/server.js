@@ -4,6 +4,18 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const expenseRoutes = require('./routes/expenseRoutes');
 const Expense = require('./models/Expense');
+const Category = require('./models/Category');
+const Source = require('./models/Source');
+const categoryController = require('./controllers/categoryController');
+
+const categoryRoutes = require('./routes/categoryRoutes');
+const sourceRoutes = require('./routes/sourceRoutes');
+
+// Define database associations
+Expense.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
+Expense.belongsTo(Source, { foreignKey: 'sourceId', as: 'source' });
+Category.hasMany(Expense, { foreignKey: 'categoryId', as: 'expenses' });
+Source.hasMany(Expense, { foreignKey: 'sourceId', as: 'expenses' });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,11 +26,16 @@ app.use(express.json());
 
 // Database Connection
 sequelize.sync({ alter: true }) // Use alter: true to update schema if needed
-  .then(() => console.log('Database synced & connected...'))
+  .then(async () => {
+    console.log('Database synced & connected...');
+    await categoryController.seedCategories();
+  })
   .catch(err => console.log('Error: ' + err));
 
 // Routes
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/sources', sourceRoutes);
 
 app.get('/', (req, res) => {
   res.send('House Expense API is running...');

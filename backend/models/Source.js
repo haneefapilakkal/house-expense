@@ -1,32 +1,23 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Expense = sequelize.define('Expense', {
+const Source = sequelize.define('Source', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
-  title: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  amount: {
-    type: DataTypes.DECIMAL(10, 2),
+  type: {
+    type: DataTypes.ENUM('Person', 'Loan', 'Asset Sale'),
     allowNull: false
   },
-  categoryId: {
-    type: DataTypes.UUID,
+  totalAmount: {
+    type: DataTypes.DECIMAL(15, 2),
     allowNull: true
-  },
-  sourceId: {
-    type: DataTypes.UUID,
-    allowNull: true
-  },
-  date: {
-    type: DataTypes.DATEONLY,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
   },
   description: {
     type: DataTypes.TEXT,
@@ -36,4 +27,4 @@ const Expense = sequelize.define('Expense', {
   timestamps: true
 });
 
-module.exports = Expense;
+module.exports = Source;
