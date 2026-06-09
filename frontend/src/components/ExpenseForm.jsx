@@ -6,7 +6,7 @@ const CATEGORIES_URL = import.meta.env.VITE_API_URL + '/categories';
 const SOURCES_URL = import.meta.env.VITE_API_URL + '/sources';
 const EXPENSES_URL = import.meta.env.VITE_API_URL + '/expenses';
 
-const ExpenseForm = ({ onExpenseAdded, onClose }) => {
+const ExpenseForm = ({ onExpenseAdded, currentUser, onClose }) => {
   const [categories, setCategories] = useState([]);
   const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,11 @@ const ExpenseForm = ({ onExpenseAdded, onClose }) => {
       return;
     }
     try {
-      await axios.post(EXPENSES_URL, formData);
+      const payload = {
+        ...formData,
+        userId: currentUser?.id
+      };
+      await axios.post(EXPENSES_URL, payload);
       onExpenseAdded();
       onClose();
     } catch (error) {

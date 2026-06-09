@@ -23,6 +23,15 @@ const Expense = sequelize.define('Expense', {
     type: DataTypes.UUID,
     allowNull: true
   },
+  status: {
+    type: DataTypes.ENUM('Active', 'Pending Cancellation', 'Cancelled'),
+    allowNull: false,
+    defaultValue: 'Active'
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: true
+  },
   date: {
     type: DataTypes.DATEONLY,
     allowNull: false,

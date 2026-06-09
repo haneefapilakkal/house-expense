@@ -9,7 +9,8 @@ exports.getSources = async (req, res) => {
 
     const sourcesWithBalances = sources.map(source => {
       const expenses = source.expenses || [];
-      const totalSpent = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
+      const activeExpenses = expenses.filter(exp => exp.status !== 'Cancelled');
+      const totalSpent = activeExpenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
       const remainingBalance = source.type === 'Person' 
         ? null 
         : parseFloat(source.totalAmount || 0) - totalSpent;

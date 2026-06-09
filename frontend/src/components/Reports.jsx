@@ -37,9 +37,10 @@ const Reports = () => {
 
   // 1. Date Filtering Logic
   const getFilteredExpenses = () => {
-    if (dateFilter === 'all') return expenses;
+    const activeExpenses = expenses.filter(exp => exp.status !== 'Cancelled');
+    if (dateFilter === 'all') return activeExpenses;
     const now = new Date();
-    return expenses.filter(exp => {
+    return activeExpenses.filter(exp => {
       const expDate = new Date(exp.date);
       if (dateFilter === 'month') {
         return expDate.getMonth() === now.getMonth() && expDate.getFullYear() === now.getFullYear();
@@ -78,7 +79,7 @@ const Reports = () => {
   // 4. Statement of Account (SOA) Ledger for Selected Source
   const selectedSource = sources.find(s => s.id === selectedSourceId);
   const sourceExpenses = expenses
-    .filter(exp => exp.sourceId === selectedSourceId)
+    .filter(exp => exp.sourceId === selectedSourceId && exp.status !== 'Cancelled')
     .sort((a, b) => new Date(a.date) - new Date(b.date)); // Chronological order for ledger
 
   // Calculate Running Balance / Cumulative contributions
