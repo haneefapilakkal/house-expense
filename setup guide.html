@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAK-Market Place Setup Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #818cf8;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #22d3ee;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            color: var(--secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-top: 25px;
+        }
+
+        p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre {
+            background: #000;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(79, 70, 229, 0.2);
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        td {
+            color: var(--text-dim);
+        }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            opacity: 0.6;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                background: white;
+                backdrop-filter: none;
+                padding: 40px;
+            }
+            h1 {
+                background: none;
+                -webkit-text-fill-color: black;
+            }
+            h2, h3 {
+                color: black;
+            }
+            pre {
+                background: #f3f4f6;
+                border: 1px solid #e5e7eb;
+            }
+            pre code {
+                color: #1f2937;
+            }
+            .badge {
+                border: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="badge">Technical Documentation</span>
+        <h1>LAK-Market Place</h1>
+        <p>A comprehensive setup guide for the Lakshadweep Marketplace project, covering backend, frontend, admin panel, and mobile app components.</p>
+
+        <h2>1. Prerequisites</h2>
+        <p>Ensure you have the following installed on your system:</p>
+        <ul>
+            <li><strong>Node.js</strong>: v18 or higher (v20+ recommended)</li>
+            <li><strong>npm</strong>: v9 or higher</li>
+            <li><strong>MySQL</strong>: v8.0</li>
+            <li><strong>Flutter SDK</strong>: v3.0 or higher</li>
+            <li><strong>Docker</strong>: Optional, for running the MySQL container</li>
+        </ul>
+
+        <h2>2. Backend Setup (Node.js/Express)</h2>
+        <h3>Environment Configuration</h3>
+        <p>Create a <code>.env</code> file in the <code>backend/</code> directory with the following integration credentials:</p>
+        <pre><code># Server
+PORT=5000
+NODE_ENV=development
+
+# Database (MySQL)
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=rootpassword
+DB_NAME=lak_marketplace
+
+# Auth & Security
+JWT_SECRET=your_jwt_secret_key
+OTP_EXPIRY_MINUTES=5
+
+# Email (Nodemailer/Gmail)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-specific-password
+
+# Marketplace Logic
+COMMISSION_PERCENTAGE=5</code></pre>
+
+        <div style="background: rgba(79, 70, 229, 0.1); border-left: 4px solid var(--primary); padding: 15px; margin: 20px 0; border-radius: 8px;">
+            <strong style="color: var(--secondary);">Security Note:</strong> For Gmail integration, ensure you use an <strong>App Password</strong>. Direct account passwords will be blocked by Google's security policy.
+        </div>
+
+        <h3>Database Initialization</h3>
+        <p>Run the <code>backend/database_schema.sql</code> script in your MySQL instance. Alternatively, use the provided Docker configuration:</p>
+        <pre><code>docker-compose up -d</code></pre>
+
+        <h3>Installation & Execution</h3>
+        <pre><code>cd backend
+npm install
+npm run dev</code></pre>
+
+        <h2>3. Frontend Setup (React/Vite)</h2>
+        <p>The frontend is built with React and Tailwind CSS. Update your <code>frontend/.env</code> for local development:</p>
+        <pre><code>VITE_API_URL=http://localhost:5000/api</code></pre>
+        <pre><code>cd frontend
+npm install
+npm run dev</code></pre>
+
+        <h2>4. Mobile App Setup (Flutter)</h2>
+        <p>The mobile application uses Flutter. Ensure your developmental device can reach the backend server.</p>
+        <p>Configure the <code>baseUrl</code> in <code>mobile-app/lib/services/api_service.dart</code>:</p>
+        <pre><code>static const String baseUrl = 'http://YOUR_SERVER_IP:5000/api';</code></pre>
+        <pre><code>cd mobile-app
+flutter pub get
+flutter run</code></pre>
+
+        <h2>5. Component Overview</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Technology</th>
+                    <th>Local Port</th>
+                    <th>Cloud URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Backend</td>
+                    <td>Node.js / Express</td>
+                    <td>5000</td>
+                    <td>lakmrkt.onrender.com</td>
+                </tr>
+                <tr>
+                    <td>Frontend</td>
+                    <td>React / Vite</td>
+                    <td>5173</td>
+                    <td>lakmrkt.vercel.app</td>
+                </tr>
+                <tr>
+                    <td>Admin Panel</td>
+                    <td>React / Vite</td>
+                    <td>5173/4</td>
+                    <td>(Vercel Deploy)</td>
+                </tr>
+                <tr>
+                    <td>Database</td>
+                    <td>Cloud MySQL</td>
+                    <td>12350 (Ext)</td>
+                    <td>Cloud Hosted</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>6. Cloud Sync & Deployment Flow</h2>
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h3 style="margin-top: 0;">Automated Synchronization</h3>
+            <p>This project uses an <strong>Asynchronous Cloud Synchronization</strong> workflow:</p>
+            <ul style="color: var(--text-dim); margin-top: 15px;">
+                <li><strong>Source Control</strong>: GitHub Repository linked to <code>haneefa0007-cyber</code>.</li>
+                <li><strong>CI/CD Bridge</strong>: Pushing changes to the <code>main</code> branch automatically triggers secondary builds on Render and Vercel.</li>
+                <li><strong>Backend Hosting</strong>: Render handles Express server and Socket.io scaling.</li>
+                <li><strong>Frontend Hosting</strong>: Vercel provides edge-optimized delivery for the React application.</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Lakshadweep Marketplace Project. Generated by Antigravity.
+        </div>
+    </div>
+</body>
+</html>
+
