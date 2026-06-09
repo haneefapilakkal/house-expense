@@ -235,13 +235,13 @@ const SourceManager = () => {
               <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-900">
                 <div>
                   <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider">Total Spent</span>
-                  <span className="text-base font-bold text-white">${parseFloat(source.totalSpent || 0).toFixed(2)}</span>
+                  <span className="text-base font-bold text-white">₹{parseFloat(source.totalSpent || 0).toFixed(2)}</span>
                 </div>
                 {source.type !== 'Person' ? (
                   <div>
                     <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider">Remaining Balance</span>
                     <span className={`text-base font-bold ${source.remainingBalance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
-                      ${parseFloat(source.remainingBalance || 0).toFixed(2)}
+                      ₹{parseFloat(source.remainingBalance || 0).toFixed(2)}
                     </span>
                   </div>
                 ) : (

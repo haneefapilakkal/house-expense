@@ -56,7 +56,7 @@ const ExpenseList = ({ expenses, onExpenseDeleted }) => {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="font-bold text-white">${parseFloat(expense.amount).toFixed(2)}</p>
+                <p className="font-bold text-white">₹{parseFloat(expense.amount).toFixed(2)}</p>
                 {expense.description && (
                   <p className="text-[10px] text-slate-500 max-w-[150px] truncate" title={expense.description}>
                     {expense.description}

@@ -77,7 +77,7 @@ const Dashboard = () => {
                 <div className="bg-gradient-to-br from-indigo-600 to-indigo-850 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl relative overflow-hidden group">
                   <Wallet className="absolute -right-4 -bottom-4 text-white/10 w-28 h-28 sm:w-32 sm:h-32 transform rotate-12 group-hover:rotate-0 transition-transform duration-500" />
                   <p className="text-indigo-100 text-sm font-medium mb-1">Total Project Spending</p>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white">${totalAmount.toFixed(2)}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white">₹{totalAmount.toFixed(2)}</h2>
                   <div className="mt-4 inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold backdrop-blur-md">
                     <TrendingUp size={12} />
                     Overall Cost
@@ -87,7 +87,7 @@ const Dashboard = () => {
                 <div className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-xl relative overflow-hidden transition-all hover:border-slate-700">
                   <Calendar className="absolute -right-4 -bottom-4 text-slate-800/60 w-28 h-28 sm:w-32 sm:h-32 transform rotate-12" />
                   <p className="text-slate-400 text-sm font-medium mb-1">{currentMonth} Spending</p>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white">${monthlyExpenses.toFixed(2)}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white">₹{monthlyExpenses.toFixed(2)}</h2>
                   <p className="mt-4 text-slate-500 text-xs sm:text-sm">Target: Maintain within budget</p>
                 </div>
               </div>
@@ -131,7 +131,7 @@ const Dashboard = () => {
                             <div className="flex justify-between text-[10px] sm:text-xs text-slate-400 mb-1">
                               <span>Remaining</span>
                               <span className={source.remainingBalance < 0 ? 'text-red-400 font-bold' : 'text-emerald-400 font-bold'}>
-                                ${parseFloat(source.remainingBalance || 0).toFixed(2)}
+                                ₹{parseFloat(source.remainingBalance || 0).toFixed(2)}
                               </span>
                             </div>
                             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
@@ -143,15 +143,15 @@ const Dashboard = () => {
                               ></div>
                             </div>
                             <div className="flex justify-between text-[9px] text-slate-500 mt-1">
-                              <span>Spent: ${parseFloat(source.totalSpent || 0).toFixed(2)}</span>
-                              <span>Total: ${parseFloat(source.totalAmount || 0).toFixed(2)}</span>
+                              <span>Spent: ₹{parseFloat(source.totalSpent || 0).toFixed(2)}</span>
+                              <span>Total: ₹{parseFloat(source.totalAmount || 0).toFixed(2)}</span>
                             </div>
                           </div>
                         ) : (
                           <div className="mt-3 flex justify-between items-center bg-slate-900/50 p-2 rounded-xl border border-slate-850">
                             <span className="text-[10px] sm:text-xs text-slate-550">Contributed:</span>
                             <span className="text-xs sm:text-sm font-bold text-indigo-400">
-                              ${parseFloat(source.totalSpent || 0).toFixed(2)}
+                              ₹{parseFloat(source.totalSpent || 0).toFixed(2)}
                             </span>
                           </div>
                         )}

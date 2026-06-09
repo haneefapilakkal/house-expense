@@ -162,8 +162,8 @@ const Reports = () => {
                 <h3 className="text-lg font-bold text-white mb-2">Total Capital Consumption</h3>
                 <p className="text-slate-500 text-xs mb-4">Consolidated Loans and Asset Sale limits</p>
                 <div className="flex justify-between text-sm text-slate-400 mb-2">
-                  <span>Spent: ${totalSpentFromBudget.toFixed(2)}</span>
-                  <span>Total Capital: ${totalBudget.toFixed(2)}</span>
+                  <span>Spent: ₹{totalSpentFromBudget.toFixed(2)}</span>
+                  <span>Total Capital: ₹{totalBudget.toFixed(2)}</span>
                 </div>
                 <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
                   <div
@@ -175,7 +175,7 @@ const Reports = () => {
                 </div>
                 <div className="flex justify-between text-xs text-slate-500 mt-2 font-medium">
                   <span>{budgetUtilizationPercent.toFixed(1)}% Consumed</span>
-                  <span>Remaining: ${(totalBudget - totalSpentFromBudget).toFixed(2)}</span>
+                  <span>Remaining: ₹{(totalBudget - totalSpentFromBudget).toFixed(2)}</span>
                 </div>
               </div>
             )}
@@ -211,7 +211,7 @@ const Reports = () => {
                         {selectedSource.type === 'Person' ? 'Total Spent' : 'Initial Credit'}
                       </span>
                       <span className="text-sm sm:text-lg font-bold text-white print:text-black">
-                        ${selectedSource.type === 'Person'
+                        ₹{selectedSource.type === 'Person'
                           ? parseFloat(selectedSource.totalSpent || 0).toFixed(2)
                           : parseFloat(selectedSource.totalAmount || 0).toFixed(2)}
                       </span>
@@ -223,7 +223,7 @@ const Reports = () => {
                       <span className="text-sm sm:text-lg font-bold text-white print:text-black">
                         {selectedSource.type === 'Person'
                           ? ledgerItems.length
-                          : `$${parseFloat(selectedSource.totalSpent || 0).toFixed(2)}`}
+                          : `₹${parseFloat(selectedSource.totalSpent || 0).toFixed(2)}`}
                       </span>
                     </div>
                     <div>
@@ -237,7 +237,7 @@ const Reports = () => {
                       }`}>
                         {selectedSource.type === 'Person'
                           ? 'Personal Contrib.'
-                          : `$${parseFloat(selectedSource.remainingBalance || 0).toFixed(2)}`}
+                          : `₹${parseFloat(selectedSource.remainingBalance || 0).toFixed(2)}`}
                       </span>
                     </div>
                   </div>
@@ -262,7 +262,7 @@ const Reports = () => {
                             <td className="py-3 px-2">Initial funding ledger credit</td>
                             <td className="py-3 px-2 text-right">-</td>
                             <td className="py-3 px-2 text-right font-semibold text-white print:text-black">
-                              ${parseFloat(selectedSource.totalAmount || 0).toFixed(2)}
+                              ₹{parseFloat(selectedSource.totalAmount || 0).toFixed(2)}
                             </td>
                           </tr>
                         )}
@@ -285,10 +285,10 @@ const Reports = () => {
                                 </div>
                               </td>
                               <td className="py-3 px-2 text-right text-red-400 font-medium print:text-black">
-                                -${parseFloat(item.amount).toFixed(2)}
+                                -₹{parseFloat(item.amount).toFixed(2)}
                               </td>
                               <td className="py-3 px-2 text-right font-semibold text-white print:text-black">
-                                ${parseFloat(item.runningBalance).toFixed(2)}
+                                ₹{parseFloat(item.runningBalance).toFixed(2)}
                               </td>
                             </tr>
                           ))
@@ -325,7 +325,7 @@ const Reports = () => {
                             </span>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <span className="font-bold text-white">${cat.amount.toFixed(2)}</span>
+                            <span className="font-bold text-white">₹{cat.amount.toFixed(2)}</span>
                             <span className="text-slate-500 text-[10px] block font-medium">
                               {percentage.toFixed(1)}%
                             </span>
