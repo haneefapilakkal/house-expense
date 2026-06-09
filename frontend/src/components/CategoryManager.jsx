@@ -1,29 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Pencil, Trash2, X, Save, Folder, FileText, Layers, Container, Activity, Hammer, Grid, Brush, Zap, Droplet, Layout, Paintbrush, Users, MoreHorizontal } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
+import { ICON_MAP, getIconComponent } from './iconUtils';
+
+// Re-export for backward compatibility with other components
+export { getIconComponent, ICON_MAP };
 
 const API_URL = import.meta.env.VITE_API_URL + '/categories';
-
-const ICON_MAP = {
-  Folder: <Folder />,
-  FileText: <FileText />,
-  Layers: <Layers />,
-  Container: <Container />,
-  Activity: <Activity />,
-  Hammer: <Hammer />,
-  Grid: <Grid />,
-  Brush: <Brush />,
-  Zap: <Zap />,
-  Droplet: <Droplet />,
-  Layout: <Layout />,
-  Paintbrush: <Paintbrush />,
-  Users: <Users />,
-  MoreHorizontal: <MoreHorizontal />
-};
-
-export const getIconComponent = (iconName) => {
-  return ICON_MAP[iconName] || <Folder />;
-};
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
@@ -198,4 +181,3 @@ const CategoryManager = () => {
 };
 
 export default CategoryManager;
-export { ICON_MAP };

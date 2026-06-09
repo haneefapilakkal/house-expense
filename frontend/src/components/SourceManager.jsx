@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Pencil, Trash2, X, Save, Wallet, Building2, Coins, ArrowUpRight } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
+import { getSourceIcon } from './iconUtils';
+
+// Re-export for consumers that import from SourceManager directly
+export { getSourceIcon };
 
 const API_URL = import.meta.env.VITE_API_URL + '/sources';
-
-export const getSourceIcon = (type) => {
-  switch (type) {
-    case 'Loan': return <Building2 className="text-yellow-400" />;
-    case 'Asset Sale': return <Coins className="text-amber-400" />;
-    default: return <Wallet className="text-emerald-400" />;
-  }
-};
 
 const SourceManager = () => {
   const [sources, setSources] = useState([]);
