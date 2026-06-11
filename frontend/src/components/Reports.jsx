@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
-import { FileText, Printer, Building2, Coins, Wallet, Download, Calendar, ArrowDownCircle } from 'lucide-react';
+import { FileText, Printer, Building2, Coins, Wallet, Download, Calendar, ArrowDownCircle, Plus, Minus } from 'lucide-react';
 import { getIconComponent, getSourceIcon } from './iconUtils';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -14,6 +14,14 @@ const Reports = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSourceId, setSelectedSourceId] = useState('');
   const [dateFilter, setDateFilter] = useState('all'); // 'all', 'month', '30days'
+  const [expandedCategories, setExpandedCategories] = useState({});
+
+  const toggleCategory = (catName) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [catName]: !prev[catName]
+    }));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -178,11 +186,46 @@ const Reports = () => {
 
     categoryBreakdown.forEach(cat => {
       const percentage = overallSpent > 0 ? (cat.amount / overallSpent) * 100 : 0;
+      
+      // Main category row
       breakdownRows.push([
-        cat.name,
-        `INR ${cat.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-        `${percentage.toFixed(1)}%`
+        { 
+          content: cat.name.toUpperCase(), 
+          styles: { fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [79, 70, 229] } 
+        },
+        { 
+          content: `INR ${cat.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+          styles: { fontStyle: 'bold', fillColor: [241, 245, 249], halign: 'right' } 
+        },
+        { 
+          content: `${percentage.toFixed(1)}%`, 
+          styles: { fontStyle: 'bold', fillColor: [241, 245, 249], halign: 'right' } 
+        }
       ]);
+
+      // Nested transactions under this category
+      const catExpenses = filteredExpenses.filter(
+        exp => (exp.category?.name || 'Uncategorized') === cat.name
+      );
+
+      catExpenses.forEach(exp => {
+        const dateStr = new Date(exp.date).toLocaleDateString();
+        const detailStr = `   •  ${dateStr}: ${exp.title}${exp.description ? ` (${exp.description})` : ''}`;
+        breakdownRows.push([
+          { 
+            content: detailStr, 
+            styles: { textColor: [71, 85, 105], fontSize: 8.5 } 
+          },
+          { 
+            content: `INR ${parseFloat(exp.amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+            styles: { textColor: [71, 85, 105], fontSize: 8.5, halign: 'right' } 
+          },
+          { 
+            content: '', 
+            styles: { fillColor: [255, 255, 255] } 
+          }
+        ]);
+      });
     });
 
     if (categoryBreakdown.length === 0) {
@@ -596,7 +639,7 @@ const Reports = () => {
           <div className="space-y-6 no-print">
             <div className="bg-slate-900 border border-slate-800 rounded-[2rem] p-6 shadow-xl">
               <h3 className="text-xl font-bold text-white mb-2">Category Breakdown</h3>
-              <p className="text-slate-500 text-xs mb-6">Distribution of project expenses by construction stage</p>
+              <p className="text-slate-500 text-xs mb-6">Distribution of project expenses by construction stage. Click a category to expand details.</p>
 
               {categoryBreakdown.length === 0 ? (
                 <p className="text-slate-500 text-center py-6 text-sm">No expenses recorded for this selection.</p>
@@ -604,15 +647,26 @@ const Reports = () => {
                 <div className="space-y-5">
                   {categoryBreakdown.map(cat => {
                     const percentage = overallSpent > 0 ? (cat.amount / overallSpent) * 100 : 0;
+                    const isExpanded = !!expandedCategories[cat.name];
+                    const catExpenses = filteredExpenses.filter(
+                      exp => (exp.category?.name || 'Uncategorized') === cat.name
+                    );
+
                     return (
                       <div key={cat.name} className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
+                        <div 
+                          onClick={() => toggleCategory(cat.name)}
+                          className="flex justify-between items-center text-xs cursor-pointer group hover:bg-slate-800/40 p-2 -mx-2 rounded-xl transition-all"
+                        >
                           <div className="flex items-center gap-2 min-w-0">
                             <span className="text-indigo-400 w-4 h-4 flex-shrink-0">
                               {getIconComponent(cat.icon)}
                             </span>
-                            <span className="font-semibold text-slate-300 truncate" title={cat.name}>
+                            <span className="font-semibold text-slate-300 truncate group-hover:text-white" title={cat.name}>
                               {cat.name}
+                            </span>
+                            <span className="text-[10px] text-slate-500 flex-shrink-0">
+                              {isExpanded ? <Minus size={10} /> : <Plus size={10} />}
                             </span>
                           </div>
                           <div className="text-right flex-shrink-0">
@@ -628,6 +682,28 @@ const Reports = () => {
                             style={{ width: `${percentage}%` }}
                           ></div>
                         </div>
+
+                        {/* Collapsible Expense Details */}
+                        {isExpanded && (
+                          <div className="pl-6 pt-1.5 pb-2 space-y-1.5 border-l-2 border-slate-800/80 ml-2 text-[11px] text-slate-400">
+                            {catExpenses.length === 0 ? (
+                              <div className="text-[10px] text-slate-500">No transactions under this filter.</div>
+                            ) : (
+                              catExpenses.map(exp => (
+                                <div key={exp.id} className="flex justify-between items-start gap-2 py-0.5 hover:text-white transition-colors">
+                                  <div className="min-w-0">
+                                    <span className="text-[9px] text-slate-500 mr-2">{new Date(exp.date).toLocaleDateString()}</span>
+                                    <span className="font-medium text-slate-300">{exp.title}</span>
+                                    {exp.description && (
+                                      <span className="text-[9px] text-slate-500 block">{exp.description}</span>
+                                    )}
+                                  </div>
+                                  <span className="font-semibold text-slate-400 flex-shrink-0">₹{parseFloat(exp.amount).toFixed(2)}</span>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
