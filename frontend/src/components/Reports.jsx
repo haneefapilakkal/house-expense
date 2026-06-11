@@ -148,23 +148,25 @@ const Reports = () => {
     doc.setFont('helvetica', 'normal');
     doc.text(`${new Date().toLocaleString()}`, 150, 42);
 
-    // Summary Metrics Box
+    // Summary Metrics Box (4-column layout)
     doc.setFillColor(248, 250, 252);
     doc.rect(14, 48, 182, 22, 'F');
     doc.setDrawColor(226, 232, 240);
     doc.rect(14, 48, 182, 22, 'S');
 
-    doc.setFontSize(9);
+    doc.setFontSize(7.5);
     doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
-    doc.text('CONSOLIDATED CAPITAL LIMIT', 20, 54);
-    doc.text('TOTAL SPENT FROM CAPITAL', 80, 54);
-    doc.text('REMAINING BUDGET BALANCE', 140, 54);
+    doc.text('TOTAL PROJECT EXPENSE', 18, 54);
+    doc.text('TOTAL CAPITAL LIMIT', 66, 54);
+    doc.text('SPENT FROM CAPITAL', 112, 54);
+    doc.text('REMAINING BALANCE', 156, 54);
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(10.5);
     doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-    doc.text(`INR ${totalBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 20, 63);
-    doc.text(`INR ${totalSpentFromBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 80, 63);
+    doc.text(`INR ${overallSpent.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 18, 63);
+    doc.text(`INR ${totalBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 66, 63);
+    doc.text(`INR ${totalSpentFromBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 112, 63);
 
     const remainingBudget = totalBudget - totalSpentFromBudget;
     if (remainingBudget < 0) {
@@ -172,7 +174,7 @@ const Reports = () => {
     } else {
       doc.setTextColor(16, 185, 129);
     }
-    doc.text(`INR ${remainingBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 140, 63);
+    doc.text(`INR ${remainingBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 156, 63);
 
     // Show Capital consumption info
     doc.setFontSize(9);
@@ -639,7 +641,13 @@ const Reports = () => {
           <div className="space-y-6 no-print">
             <div className="bg-slate-900 border border-slate-800 rounded-[2rem] p-6 shadow-xl">
               <h3 className="text-xl font-bold text-white mb-2">Category Breakdown</h3>
-              <p className="text-slate-500 text-xs mb-6">Distribution of project expenses by construction stage. Click a category to expand details.</p>
+              <p className="text-slate-500 text-xs mb-4">Distribution of project expenses by construction stage. Click a category to expand details.</p>
+
+              {/* Total Project Expense metric */}
+              <div className="mb-6 p-4 bg-slate-950/40 border border-slate-850 rounded-2xl flex justify-between items-center">
+                <span className="text-slate-400 text-xs font-semibold">Total Project Expense:</span>
+                <span className="text-lg font-bold text-indigo-400">₹{overallSpent.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
 
               {categoryBreakdown.length === 0 ? (
                 <p className="text-slate-500 text-center py-6 text-sm">No expenses recorded for this selection.</p>
