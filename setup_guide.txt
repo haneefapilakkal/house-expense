@@ -1,0 +1,95 @@
+========================================================================
+                      HOUSE EXPENSE TRACKER - SETUP GUIDE
+========================================================================
+
+A multi-user secure application to track construction project expenses,
+fund source balances (loans, personal contributions, assets), and generate
+detailed ledger and stage-based reports.
+
+------------------------------------------------------------------------
+1. PREREQUISITES
+------------------------------------------------------------------------
+Make sure you have the following installed:
+- Node.js (v18.x or higher, v20+ recommended)
+- npm (v9.x or higher)
+- PostgreSQL (or use SQLite local database option)
+
+------------------------------------------------------------------------
+2. BACKEND SETUP (Node.js & Express)
+------------------------------------------------------------------------
+1. Open a terminal and navigate to the backend directory:
+   cd backend
+
+2. Install the backend dependencies:
+   npm install
+
+3. Configure the environment variables. Create a `.env` file in the 
+   `backend` directory and add the following settings:
+
+   PORT=5000
+   DATABASE_URL=postgresql://username:password@hostname:port/dbname?sslmode=require
+   JWT_SECRET=your_jwt_secret_key_here
+
+   *NOTE: If DATABASE_URL is not provided or empty, the backend will 
+   automatically fall back to using a local SQLite database file 
+   (`database.sqlite`).
+
+4. Running the Dev Server:
+   npm run dev
+
+   *IMPORTANT SAFETY WARNING:*
+   On first sync with a clean database schema, default seed values for categories 
+   and initial accounts (admin@home.com, user@home.com) will be set up.
+   Do NOT modify `server.js` to use `sequelize.sync({ force: true })` on 
+   an active production database, as it will drop all tables and delete 
+   any entered cloud data. Keep it on `sequelize.sync({ alter: true })`.
+
+------------------------------------------------------------------------
+3. FRONTEND SETUP (React & Vite)
+------------------------------------------------------------------------
+1. Open a terminal and navigate to the frontend directory:
+   cd frontend
+
+2. Install the frontend dependencies:
+   npm install
+
+3. Configure the environment variables. Create a `.env` file in the 
+   `frontend` directory and add:
+
+   VITE_API_URL=http://localhost:5000/api
+
+4. Running the Dev Server:
+   npm run dev
+
+5. Open your browser and navigate to:
+   http://localhost:5173/
+
+------------------------------------------------------------------------
+4. DEFAULT SEEDED CREDENTIALS
+------------------------------------------------------------------------
+When the database is empty, the application automatically seeds the 
+following users:
+
+- Admin Account:
+  * Email: admin@home.com
+  * Password: admin123
+  * Role: Admin (has access to user management, full CRUD operations)
+
+- Contractor Account:
+  * Email: user@home.com
+  * Password: user123
+  * Role: Normal
+
+------------------------------------------------------------------------
+5. PROJECT STRUCTURE
+------------------------------------------------------------------------
+- /backend
+  - /config: database connection setup using Sequelize
+  - /controllers: business logic for expenses, categories, sources, auth, and users
+  - /middleware: verifyToken and Admin authorization check logic
+  - /models: Database tables definition (Expense, Category, Source, User)
+  - /routes: route definitions mapping endpoints to controller handlers
+- /frontend
+  - /src/components: user interface components (Dashboard, ExpenseList, Reports, etc.)
+  - /src/utils/api.js: custom Axios instance with JWT interceptors for auto-auth
+  - /src/App.jsx: React routing and session initialization logic

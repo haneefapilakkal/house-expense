@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { FileText, Printer, Building2, Coins, Wallet, Download, Calendar, ArrowDownCircle } from 'lucide-react';
 import { getIconComponent, getSourceIcon } from './iconUtils';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const EXPENSES_URL = '/expenses';
 const SOURCES_URL = '/sources';
@@ -100,6 +102,281 @@ const Reports = () => {
     window.print();
   };
 
+  const generateProjectReportPDF = () => {
+    const doc = new jsPDF();
+    const primaryColor = [79, 70, 229]; // Indigo hex #4f46e5
+    const textColor = [15, 23, 42]; // Slate 900 hex #0f172a
+    const mutedTextColor = [100, 116, 139]; // Slate 500 hex #64748b
+
+    // Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text('PROJECT EXPENDITURE REPORT', 14, 22);
+
+    // Subtitle
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
+    doc.text('HOUSE CONSTRUCTION PROJECT (KERALA)', 14, 28);
+
+    // Divider
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.5);
+    doc.line(14, 32, 196, 32);
+
+    // Metadata
+    doc.setFontSize(10);
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Report Scope:', 14, 42);
+    doc.setFont('helvetica', 'normal');
+    const dateText = dateFilter === 'all' ? 'All Time Expenses' : dateFilter === 'month' ? 'This Month Expenses' : 'Last 30 Days Expenses';
+    doc.text(dateText, 42, 42);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Date Exported:', 120, 42);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${new Date().toLocaleString()}`, 150, 42);
+
+    // Summary Metrics Box
+    doc.setFillColor(248, 250, 252);
+    doc.rect(14, 48, 182, 22, 'F');
+    doc.setDrawColor(226, 232, 240);
+    doc.rect(14, 48, 182, 22, 'S');
+
+    doc.setFontSize(9);
+    doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
+    doc.text('CONSOLIDATED CAPITAL LIMIT', 20, 54);
+    doc.text('TOTAL SPENT FROM CAPITAL', 80, 54);
+    doc.text('REMAINING BUDGET BALANCE', 140, 54);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.text(`INR ${totalBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 20, 63);
+    doc.text(`INR ${totalSpentFromBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 80, 63);
+
+    const remainingBudget = totalBudget - totalSpentFromBudget;
+    if (remainingBudget < 0) {
+      doc.setTextColor(239, 68, 68);
+    } else {
+      doc.setTextColor(16, 185, 129);
+    }
+    doc.text(`INR ${remainingBudget.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 140, 63);
+
+    // Show Capital consumption info
+    doc.setFontSize(9);
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Consolidated Capital Utilization: ${budgetUtilizationPercent.toFixed(1)}% Consumed`, 14, 76);
+
+    // Category Breakdown Table
+    const breakdownHeaders = [['Stage/Category Description', 'Amount Spent', 'Percentage of Total']];
+    const breakdownRows = [];
+
+    categoryBreakdown.forEach(cat => {
+      const percentage = overallSpent > 0 ? (cat.amount / overallSpent) * 100 : 0;
+      breakdownRows.push([
+        cat.name,
+        `INR ${cat.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        `${percentage.toFixed(1)}%`
+      ]);
+    });
+
+    if (categoryBreakdown.length === 0) {
+      breakdownRows.push(['No expenses recorded in this date filter scope', '-', '-']);
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text('Stage-Wise Category Distribution Breakdown', 14, 86);
+
+    autoTable(doc, {
+      startY: 90,
+      head: breakdownHeaders,
+      body: breakdownRows,
+      theme: 'striped',
+      headStyles: {
+        fillColor: primaryColor,
+        textColor: [255, 255, 255],
+        fontSize: 10,
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        fontSize: 9,
+        textColor: textColor
+      },
+      columnStyles: {
+        0: { cellWidth: 100 },
+        1: { cellWidth: 42, halign: 'right' },
+        2: { cellWidth: 40, halign: 'right' }
+      },
+      margin: { left: 14, right: 14 },
+      didDrawPage: (data) => {
+        const str = "Page " + doc.internal.getNumberOfPages();
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
+        doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
+        doc.text("Generated by House Expense Tracker", doc.internal.pageSize.width - data.settings.margin.right - 55, doc.internal.pageSize.height - 10);
+      }
+    });
+
+    doc.save(`Project_Expenditure_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+  };
+
+  const generateSourceLedgerPDF = () => {
+    if (!selectedSource) return;
+
+    const doc = new jsPDF();
+    const primaryColor = [79, 70, 229]; // Indigo hex #4f46e5
+    const textColor = [15, 23, 42]; // Slate 900 hex #0f172a
+    const mutedTextColor = [100, 116, 139]; // Slate 500 hex #64748b
+
+    // Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text('STATEMENT OF ACCOUNT LEDGER', 14, 22);
+
+    // Subtitle
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
+    doc.text('HOUSE CONSTRUCTION PROJECT (KERALA)', 14, 28);
+
+    // Divider line
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.5);
+    doc.line(14, 32, 196, 32);
+
+    // Meta Info
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Source Name:', 14, 42);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${selectedSource.name}`, 42, 42);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Source Type:', 14, 48);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${selectedSource.type}`, 42, 48);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Date Exported:', 120, 42);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${new Date().toLocaleString()}`, 150, 42);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Date Filter:', 120, 48);
+    doc.setFont('helvetica', 'normal');
+    const dateText = dateFilter === 'all' ? 'All Time' : dateFilter === 'month' ? 'This Month' : 'Last 30 Days';
+    doc.text(dateText, 150, 48);
+
+    // Highlight summary box
+    doc.setFillColor(248, 250, 252);
+    doc.rect(14, 55, 182, 22, 'F');
+    doc.setDrawColor(226, 232, 240);
+    doc.rect(14, 55, 182, 22, 'S');
+
+    doc.setFontSize(9);
+    doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
+
+    if (selectedSource.type === 'Person') {
+      doc.text('TOTAL SPENT', 20, 61);
+      doc.text('TOTAL LEDGER ITEMS', 80, 61);
+      doc.text('SOURCE TYPE', 140, 61);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      doc.text(`INR ${parseFloat(selectedSource.totalSpent || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 20, 70);
+      doc.text(`${ledgerItems.length}`, 80, 70);
+      doc.setTextColor(79, 70, 229);
+      doc.text('Personal Contrib.', 140, 70);
+    } else {
+      doc.text('INITIAL CREDIT LIMIT', 20, 61);
+      doc.text('TOTAL DEBIT (SPENT)', 80, 61);
+      doc.text('CURRENT REMAINING BALANCE', 140, 61);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      doc.text(`INR ${parseFloat(selectedSource.totalAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 20, 70);
+      doc.text(`INR ${parseFloat(selectedSource.totalSpent || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 80, 70);
+
+      const balance = parseFloat(selectedSource.remainingBalance || 0);
+      if (balance < 0) {
+        doc.setTextColor(239, 68, 68);
+      } else {
+        doc.setTextColor(16, 185, 129);
+      }
+      doc.text(`INR ${balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 140, 70);
+    }
+
+    // Transactions list table headers and body
+    const tableHeaders = [['Date', 'Transaction Details / Category', 'Debit (Spent)', 'Running Balance']];
+    const tableRows = [];
+
+    if (selectedSource.type !== 'Person') {
+      tableRows.push([
+        'Opening',
+        'Initial funding ledger credit limit',
+        '-',
+        `INR ${parseFloat(selectedSource.totalAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      ]);
+    }
+
+    ledgerItems.forEach(item => {
+      tableRows.push([
+        new Date(item.date).toLocaleDateString(),
+        `${item.title}\nCategory: ${item.category?.name || 'General'}${item.description ? ` | Desc: ${item.description}` : ''}`,
+        `INR ${parseFloat(item.amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        `INR ${parseFloat(item.runningBalance).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      ]);
+    });
+
+    autoTable(doc, {
+      startY: 85,
+      head: tableHeaders,
+      body: tableRows,
+      theme: 'striped',
+      headStyles: {
+        fillColor: primaryColor,
+        textColor: [255, 255, 255],
+        fontSize: 10,
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        fontSize: 9,
+        textColor: textColor
+      },
+      columnStyles: {
+        0: { cellWidth: 25 },
+        1: { cellWidth: 95 },
+        2: { cellWidth: 32, halign: 'right' },
+        3: { cellWidth: 32, halign: 'right' }
+      },
+      margin: { left: 14, right: 14 },
+      didDrawPage: (data) => {
+        const str = "Page " + doc.internal.getNumberOfPages();
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(mutedTextColor[0], mutedTextColor[1], mutedTextColor[2]);
+        doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
+        doc.text("Generated by House Expense Tracker", doc.internal.pageSize.width - data.settings.margin.right - 55, doc.internal.pageSize.height - 10);
+      }
+    });
+
+    doc.save(`SOA_Ledger_${selectedSource.name.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Date Filter & Actions */}
@@ -131,12 +408,26 @@ const Reports = () => {
           </button>
         </div>
 
-        <button
-          onClick={handlePrint}
-          className="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
-        >
-          <Printer size={16} /> Print SOA Ledger
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={generateProjectReportPDF}
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 border border-indigo-500 text-white font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+          >
+            <Download size={16} /> Export PDF Report
+          </button>
+          <button
+            onClick={generateSourceLedgerPDF}
+            className="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+          >
+            <FileText size={16} /> Export PDF Ledger
+          </button>
+          <button
+            onClick={handlePrint}
+            className="w-full sm:w-auto bg-slate-800/40 hover:bg-slate-800/60 border border-slate-800 text-slate-300 font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+          >
+            <Printer size={16} /> Print View
+          </button>
+        </div>
       </div>
 
       {loading ? (
